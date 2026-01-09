@@ -1,7 +1,6 @@
 spring:
   application:
-  name: Authorization-Service
-
+    name: Authorization-Service
 
   datasource:
     url: jdbc:postgresql://localhost:5432/AuthX
@@ -9,14 +8,13 @@ spring:
     password: 01032002ama
     driver-class-name: org.postgresql.Driver
 
-    jpa:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
       hibernate:
-        ddl-auto: update
-      properties:
-        hibernate:
-          dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
   spring doc:
     swagger-ui:
       path:/swagger-ui.html
-
