@@ -17,6 +17,6 @@ import java.io.Serializable;
 public abstract class BaseDomain<T extends Serializable> implements Serializable{
     @Id
     @GeneratedValue
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = "id", nullable = false, updatable = false, length = 60)
     private T id;
 }
