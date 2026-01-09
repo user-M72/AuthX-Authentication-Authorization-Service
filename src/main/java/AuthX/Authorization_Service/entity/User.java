@@ -1,12 +1,13 @@
 package AuthX.Authorization_Service.entity;
 
 import AuthX.Authorization_Service.entity.baseDomain.BaseDomain;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -21,9 +22,17 @@ public class User extends BaseDomain<UUID> {
     @Column(name = "password", nullable = false, length = 20)
     private String password;
 
-    @Column(name = "username", nullable = false, length = 15)
-    private String username;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false, length = 20)
+    private Role role;
 
+    @Column(nullable = false)
+    private boolean enabled;
 
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createAt;
 
+    @UpdateTimestamp
+    private LocalDateTime updateAt;
 }
