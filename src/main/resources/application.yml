@@ -18,3 +18,12 @@ spring:
   spring doc:
     swagger-ui:
       path:/swagger-ui.html
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google-idp:
+            provider: google
+            client-id: google-client-id
+            client-secret: google-client-secret
