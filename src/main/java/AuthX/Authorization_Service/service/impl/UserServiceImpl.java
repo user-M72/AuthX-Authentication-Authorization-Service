@@ -64,17 +64,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto getCurrentUser() {
-        // Получаем текущую аутентификацию из SecurityContext
         var authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new RuntimeException("Unauthenticated user");
         }
 
-        // email пользователя хранится в authentication.getName()
         String email = authentication.getName();
-
-        // Используем метод getByEmail
         return getByEmail(email);
     }
 }
