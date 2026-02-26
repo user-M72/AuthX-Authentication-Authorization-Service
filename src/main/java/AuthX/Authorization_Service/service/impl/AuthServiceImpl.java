@@ -70,10 +70,6 @@ public class AuthServiceImpl implements AuthService {
     }
 //    ##TODO;Реализация:
 //
-//проверка email
-//
-//хеширование пароля
-//
 //генерация JWT
 //
 //работа с refresh token

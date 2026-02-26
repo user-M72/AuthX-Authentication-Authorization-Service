@@ -2,6 +2,7 @@ package AuthX.Authorization_Service.api;
 
 import AuthX.Authorization_Service.dto.UserRequestDto;
 import AuthX.Authorization_Service.dto.UserResponseDto;
+import AuthX.Authorization_Service.entity.Role;
 import AuthX.Authorization_Service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,6 +43,11 @@ public class UserApi {
     @GetMapping("/me")
     public UserResponseDto me(){
         return service.getCurrentUser();
+    }
+
+    @GetMapping("/statuses")
+    public Role[] getStatuses(){
+        return Role.values();
     }
 
 }
