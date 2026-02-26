@@ -7,11 +7,7 @@ import java.util.UUID;
 
 public record UserResponseDto(
         UUID id,
-        String email,
-        String password,
-        Role role,
-        boolean enabled,
-        LocalDateTime createAt,
-        LocalDateTime updateAt
+        String username,
+        String email
 ) {
 }

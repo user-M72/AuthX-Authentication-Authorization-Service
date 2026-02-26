@@ -16,6 +16,9 @@ import java.util.UUID;
 @Setter
 public class User extends BaseDomain {
 
+    @Column(name = "username", nullable = false, length = 25)
+    private  String username;
+
     @Column(name = "email", nullable = false, length = 30)
     private String email;
 
@@ -26,13 +29,4 @@ public class User extends BaseDomain {
     @Column(name = "role", nullable = false, length = 20)
     private Role role;
 
-    @Column(nullable = false)
-    private boolean enabled;
-
-    @CreationTimestamp
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updateAt;
 }

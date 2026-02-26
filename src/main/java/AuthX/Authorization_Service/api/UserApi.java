@@ -1,8 +1,11 @@
 package AuthX.Authorization_Service.api;
 
+import AuthX.Authorization_Service.config.CurrentUser;
 import AuthX.Authorization_Service.dto.UserRequestDto;
 import AuthX.Authorization_Service.dto.UserResponseDto;
 import AuthX.Authorization_Service.entity.Role;
+import AuthX.Authorization_Service.entity.User;
+import AuthX.Authorization_Service.mapper.UserMapper;
 import AuthX.Authorization_Service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

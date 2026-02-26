@@ -5,12 +5,19 @@ import AuthX.Authorization_Service.dto.LoginRequestDto;
 import AuthX.Authorization_Service.dto.RegisterRequestDto;
 import AuthX.Authorization_Service.dto.UserResponseDto;
 import AuthX.Authorization_Service.entity.User;
+import AuthX.Authorization_Service.exception.ForbiddenException;
+import AuthX.Authorization_Service.exception.UnauthorizedException;
 import AuthX.Authorization_Service.mapper.AuthMapper;
+import AuthX.Authorization_Service.repository.UserRepository;
 import AuthX.Authorization_Service.service.AuthService;
 import AuthX.Authorization_Service.service.JwtService;
 import AuthX.Authorization_Service.service.RefreshTokenService;
 import AuthX.Authorization_Service.service.UserService;
+import io.jsonwebtoken.lang.Assert;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +32,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
     private final RefreshTokenService tokenService;
     private final AuthMapper mapper;
+    private final UserRepository userRepository;
 
     @Override
     public AuthResponseDto register(RegisterRequestDto request) {
@@ -43,9 +51,9 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponseDto login(LoginRequestDto request) {
         UserResponseDto user = userService.getByEmail(request.email());
 
-        if (!passwordEncoder.matches(request.password(), user.password())){
-            throw new RuntimeException("Invalid email or password");
-        }
+//        if (!passwordEncoder.matches(request.password(), user.password())){
+//            throw new RuntimeException("Invalid email or password");
+//        }
 
         String accessToken = jwtService.generateAccessToken(user.email());
         String refreshToken = tokenService.create(user.id());
@@ -68,11 +76,45 @@ public class AuthServiceImpl implements AuthService {
     public void logout(String refreshToken) {
         tokenService.revoke(refreshToken);
     }
-//    ##TODO;Реализация:
-//
-//генерация JWT
-//
-//работа с refresh token
-//
-//обращение к UserService
+
+    @Override
+    public Authentication verifyAccessToken(String accessToken) {
+        Assert.hasText(accessToken, "JWT token cannot be null or blank");
+
+        // 1. Извлекаем email
+        String email = jwtService.extractEmail(accessToken);
+
+        // 2. Загружаем пользователя
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> {
+                    return new UnauthorizedException("User not found");
+                });
+
+        // 4. Валидируем токен
+        if (!jwtService.isTokenValid(accessToken, user)) {
+            throw new UnauthorizedException("Token is expired or invalid");
+        }
+
+        // 5. Возвращаем Authentication (credentials = токен как в старом проекте)
+        return new UsernamePasswordAuthenticationToken(
+                user,
+                accessToken
+        );
+    }
+
+    @Override
+    public UserResponseDto getCurrentUserData(String accessToken) {
+        Assert.hasText(accessToken, "JWT token cannot be null or blank");
+
+        String email = jwtService.extractEmail(accessToken);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UnauthorizedException("User not found"));
+
+        return new UserResponseDto(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail()
+        );
+    }
 }

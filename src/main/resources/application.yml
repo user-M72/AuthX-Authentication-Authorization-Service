@@ -15,15 +15,12 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-  spring doc:
-    swagger-ui:
-      path:/swagger-ui.html
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
 
-  security:
-    oauth2:
-      client:
-        registration:
-          google-idp:
-            provider: google
-            client-id: google-client-id
-            client-secret: google-client-secret
+
+jwt:
+  secret: ваш-base64-секрет
+  access-expiration: 900000
+  refresh-expiration: 604800000

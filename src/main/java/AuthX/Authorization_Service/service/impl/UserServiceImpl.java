@@ -48,7 +48,6 @@ public class UserServiceImpl implements UserService {
             user.setRole(Role.User);
         }
 
-        user.setEnabled(true);
 
         User saveUser = userRepository.save(user);
 
@@ -64,13 +63,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto getCurrentUser() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new RuntimeException("Unauthenticated user");
-        }
-
-        String email = authentication.getName();
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
         return getByEmail(email);
     }
 }

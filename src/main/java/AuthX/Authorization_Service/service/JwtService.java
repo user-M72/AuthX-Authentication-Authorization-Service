@@ -1,5 +1,6 @@
 package AuthX.Authorization_Service.service;
 
+import AuthX.Authorization_Service.entity.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -45,7 +46,7 @@ public class JwtService {
                 .getSubject();
     }
 
-    public boolean isTokenValid(String token){
+    public boolean isTokenValid(String token, User user){
         try {
             extractEmail(token);
             return true;
