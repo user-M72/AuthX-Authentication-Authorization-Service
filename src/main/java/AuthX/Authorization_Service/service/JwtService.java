@@ -2,9 +2,9 @@ package AuthX.Authorization_Service.service;
 
 import AuthX.Authorization_Service.entity.User;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -13,43 +13,39 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    private  Key key;
+    @Value("${jwt.secret}")
+    private String secretKey;
 
-    private final long accessTokenValidity = 1000* 60 * 15;
+    @Value("${jwt.access-expiration}")
+    private long accessTokenValidity;
 
-    @PostConstruct
-    public void init() {
-        try {
-            this.key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-            System.out.println("✅ JwtService initialized successfully");
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
+    private Key getSignKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateAccessToken(String email){
+    public String generateAccessToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + accessTokenValidity))
-                .signWith(key)
+                .signWith(getSignKey())
                 .compact();
     }
 
-    public String extractEmail(String token){
+    public String extractEmail(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(getSignKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
     }
 
-    public boolean isTokenValid(String token, User user){
+    public boolean isTokenValid(String token, User user) {
         try {
-            extractEmail(token);
-            return true;
+            String email = extractEmail(token);
+            return email.equals(user.getEmail());
         } catch (Exception e) {
             return false;
         }

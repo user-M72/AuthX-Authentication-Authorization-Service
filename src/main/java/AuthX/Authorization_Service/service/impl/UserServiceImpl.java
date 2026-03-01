@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(request.password()));
 
         if (user.getRole() == null){
-            user.setRole(Role.User);
+            user.setRole(Role.USER);
         }
 
 
@@ -62,10 +62,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto getCurrentUser() {
-        String email = SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getName();
-        return getByEmail(email);
+    public UserResponseDto toDto(User user) {
+        return mapper.toDto(user);
     }
 }

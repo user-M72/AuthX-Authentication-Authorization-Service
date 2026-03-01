@@ -3,7 +3,6 @@ package AuthX.Authorization_Service.util;
 import AuthX.Authorization_Service.entity.Role;
 import AuthX.Authorization_Service.entity.User;
 import AuthX.Authorization_Service.repository.UserRepository;
-import AuthX.Authorization_Service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,23 +20,23 @@ public class DbPopulator implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws Exception {
 
-        if (userRepository.findByRole(Role.Admin).isEmpty()){
+        if (userRepository.findByRole(Role.ADMIN).isEmpty()) {
 
-                User admin = new User();
-                admin.setUsername("admin");
-                admin.setRole(Role.Admin);
-                admin.setEmail("admin@admin.com");
-                admin.setPassword(passwordEncoder.encode("admin"));
+            User admin = new User();
+            admin.setUsername("admin");
+            admin.setRole(Role.ADMIN);
+            admin.setEmail("admin@admin.com");
+            admin.setPassword(passwordEncoder.encode("admin"));
 
-                userRepository.save(admin);
-            }
+            userRepository.save(admin);
+        }
 
-        if (userRepository.findByRole(Role.User).isEmpty()){
+        if (userRepository.findByRole(Role.USER).isEmpty()) {
 
             User user = new User();
             user.setUsername("user");
             user.setEmail("user@user.com");
-            user.setRole(Role.User);
+            user.setRole(Role.USER);
             user.setPassword(passwordEncoder.encode("user"));
 
             userRepository.save(user);

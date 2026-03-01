@@ -11,27 +11,27 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/auth/v1")
+@RequestMapping("/api/auth/v1")
 public class AuthApi {
 
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponseDto> register(@RequestBody RegisterRequestDto request){
+    public ResponseEntity<AuthResponseDto> register(@RequestBody RegisterRequestDto request) {
         AuthResponseDto response = authService.register(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginRequestDto request){
+    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginRequestDto request) {
         AuthResponseDto response = authService.login(request);
 
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponseDto> refresh(@RequestParam("refreshToken") String refreshToken){
+    public ResponseEntity<AuthResponseDto> refresh(@RequestParam("refreshToken") String refreshToken) {
         AuthResponseDto response = authService.refresh(refreshToken);
 
         return ResponseEntity.ok(response);
@@ -39,7 +39,7 @@ public class AuthApi {
 
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void logout(@RequestParam("refreshToken") String refreshToken){
+    public void logout(@RequestParam("refreshToken") String refreshToken) {
 
         authService.logout(refreshToken);
     }
